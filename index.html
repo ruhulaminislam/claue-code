@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>NumPad Mastery — Typing Practice for Numbers &amp; Symbols</title>
+<meta name="description" content="A typing tutor focused entirely on the number row and its shifted symbols: 1234567890 !@#$%^&*()" />
+
+<!-- Fonts: Space Grotesk (display), Inter (body/UI), JetBrains Mono (typing text).
+     All have solid system-font fallbacks so the app stays fully usable offline. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="style.css" />
+</head>
+<body data-theme="dark">
+
+<!-- ============================================================
+     APP SHELL
+     ============================================================ -->
+<div class="app">
+
+  <!-- ===================== SIDEBAR ===================== -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <span class="keycap keycap--mini brand-key" aria-hidden="true">#</span>
+      <div class="brand-text">
+        <strong>NumPad</strong><span>Mastery</span>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav" aria-label="Main navigation">
+      <button class="nav-item active" data-view="dashboard" type="button">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+        Dashboard
+      </button>
+      <button class="nav-item" data-view="lessons" type="button">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15.5a1 1 0 0 1-1 1H6.5A2.5 2.5 0 0 0 4 22V5.5Z"/><path d="M4 19a2.5 2.5 0 0 1 2.5-2.5H19"/></svg>
+        Lessons
+      </button>
+      <button class="nav-item" data-view="stats" type="button">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10"/><path d="M12 20V4"/><path d="M20 20v-7"/><path d="M2 20h20"/></svg>
+        Statistics
+      </button>
+      <button class="nav-item" data-view="achievements" type="button">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="9" r="5.5"/><path d="M8.5 13.5 7 21l5-2.5 5 2.5-1.5-7.5"/></svg>
+        Achievements
+      </button>
+    </nav>
+
+    <div class="sidebar-levels">
+      <p class="sidebar-label">Levels</p>
+      <div id="sidebarLevelList"><!-- populated by JS --></div>
+    </div>
+
+    <div class="sidebar-footer">
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle dark and light mode">
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.4M12 19.1v2.4M4.6 4.6l1.7 1.7M17.7 17.7l1.7 1.7M2.5 12h2.4M19.1 12h2.4M4.6 19.4l1.7-1.7M17.7 6.3l1.7-1.7"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a6.8 6.8 0 0 0 10.5 10.5Z"/></svg>
+        <span id="themeToggleLabel">Light mode</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Mobile overlay backdrop for sidebar -->
+  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+  <!-- ===================== MAIN COLUMN ===================== -->
+  <div class="main">
+    <header class="topbar">
+      <button class="hamburger" id="hamburgerBtn" type="button" aria-label="Open menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+      <h1 class="topbar-title" id="topbarTitle">Dashboard</h1>
+      <div class="topbar-stats">
+        <div class="pill pill--star" title="Total stars earned">
+          <span aria-hidden="true">⭐</span><span id="topStars">0</span>
+        </div>
+        <div class="pill pill--streak" title="Current streak (lessons in a row at 3★ or more)">
+          <span aria-hidden="true">🔥</span><span id="topStreak">0</span>
+        </div>
+      </div>
+    </header>
+
+    <main class="view-container" id="viewContainer">
+
+      <!-- ===================== DASHBOARD VIEW ===================== -->
+      <section class="view" id="view-dashboard">
+
+        <div class="hero">
+          <div class="hero-copy">
+            <p class="eyebrow">Number row · Symbol row</p>
+            <h2 class="hero-heading">Master every digit, every symbol,<br class="br-desktop"> every keystroke.</h2>
+            <p class="hero-sub">30 lessons built entirely around <span class="mono-accent">1234567890</span> and their shifted symbols <span class="mono-accent">!@#$%^&amp;*()</span>. Real-time feedback, star ratings, and a trainer that automatically targets your weakest keys.</p>
+            <div class="hero-actions">
+              <button class="btn btn-primary" id="continueBtn" type="button">Continue · Lesson <span id="continueLessonLabel">1</span> →</button>
+              <button class="btn btn-ghost" id="heroSmartBtn" type="button">Practice weak keys</button>
+            </div>
+          </div>
+          <div class="hero-keys">
+            <p class="hero-keys-label">Your mastery, key by key</p>
+            <div class="keystrip" id="heroKeyStrip" role="img" aria-label="Number row mastery overview"></div>
+          </div>
+        </div>
+
+        <div class="stat-grid">
+          <div class="stat-card">
+            <span class="stat-label">Average WPM</span>
+            <span class="stat-value" id="statWPM">0</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Accuracy</span>
+            <span class="stat-value" id="statAccuracy">0%</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Best WPM</span>
+            <span class="stat-value" id="statBest">0</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Current Streak</span>
+            <span class="stat-value" id="statStreak">0</span>
+          </div>
+        </div>
+
+        <div class="panel-grid">
+          <div class="panel levels-panel">
+            <div class="panel-head">
+              <h3>Your levels</h3>
+              <span class="panel-sub-inline" id="overallProgressLabel">0 / 30 lessons</span>
+            </div>
+            <div class="progress-track progress-track--lg">
+              <div class="progress-fill" id="overallProgressFill" style="width:0%"></div>
+            </div>
+            <div class="level-cards" id="levelCards"><!-- populated by JS --></div>
+          </div>
+
+          <div class="panel mistakes-panel">
+            <h3>Mistake tracking</h3>
+            <p class="panel-sub">Keys you mistype most often glow red. Practice them directly below.</p>
+            <div class="keystrip keystrip--heatmap" id="mistakeKeyStrip" role="img" aria-label="Mistake heatmap by key"></div>
+            <button class="btn btn-ghost btn-block" id="smartPracticeBtn" type="button">Generate Smart Drill</button>
+            <p class="empty-state empty-state--small hidden" id="mistakeEmptyState">No mistakes logged yet. Finish a lesson to see your weak keys here.</p>
+          </div>
+        </div>
+
+        <div class="panel achievements-preview">
+          <div class="panel-head">
+            <h3>Achievements</h3>
+            <button class="link-btn" data-view-link="achievements" type="button">View all →</button>
+          </div>
+          <div class="badge-row" id="badgeRowPreview"><!-- populated by JS --></div>
+        </div>
+      </section>
+
+      <!-- ===================== LESSONS VIEW ===================== -->
+      <section class="view hidden" id="view-lessons">
+        <div class="view-head">
+          <h2>Lessons</h2>
+          <div class="level-tabs" id="levelTabs" role="tablist">
+            <button class="level-tab active" data-level="basic" type="button">Basic</button>
+            <button class="level-tab" data-level="advance" type="button">Advance</button>
+            <button class="level-tab" data-level="pro" type="button">Pro</button>
+            <button class="level-tab" data-level="legend" type="button">Legend</button>
+          </div>
+        </div>
+        <p class="level-desc" id="levelDesc"></p>
+        <div class="lesson-grid" id="lessonGrid"><!-- populated by JS --></div>
+      </section>
+
+      <!-- ===================== TYPING VIEW ===================== -->
+      <section class="view hidden" id="view-typing">
+        <div class="typing-head">
+          <button class="btn btn-ghost btn-sm" id="backToLessonsBtn" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" width="16" height="16"><path d="M15 18l-6-6 6-6"/></svg>
+            Back
+          </button>
+          <div class="typing-title">
+            <span class="typing-level-tag" id="typingLevelTag">Basic</span>
+            <h2 id="typingLessonTitle">Lesson 1</h2>
+            <p id="typingLessonDesc" class="typing-lesson-desc"></p>
+          </div>
+          <div class="typing-live-stats">
+            <div class="live-stat"><span id="liveTime">0:00</span><label>Time</label></div>
+            <div class="live-stat"><span id="liveWPM">0</span><label>WPM</label></div>
+            <div class="live-stat"><span id="liveAccuracy">100%</span><label>Accuracy</label></div>
+            <div class="live-stat"><span id="liveMistakes">0</span><label>Mistakes</label></div>
+          </div>
+        </div>
+
+        <div class="progress-track">
+          <div class="progress-fill" id="typingProgressFill" style="width:0%"></div>
+        </div>
+
+        <div class="type-stage">
+          <div class="type-text" id="typeText" tabindex="0" aria-label="Typing area. Start typing to begin the lesson."></div>
+          <p class="type-hint" id="typeHint">Click here and start typing — the lesson begins on your first keystroke.</p>
+        </div>
+
+        <div class="onscreen-keyboard">
+          <p class="onscreen-keyboard-label">Next key</p>
+          <div class="keystrip keystrip--interactive" id="onscreenKeyboard" role="img" aria-label="On-screen number row keyboard"></div>
+        </div>
+
+        <div class="typing-actions">
+          <button class="btn btn-ghost" id="restartBtn" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" width="16" height="16"><path d="M3 12a9 9 0 1 1 2.6 6.36"/><path d="M3 21v-6h6"/></svg>
+            Restart Lesson
+          </button>
+          <button class="btn btn-primary" id="nextLessonInlineBtn" type="button" disabled>Next Lesson →</button>
+        </div>
+      </section>
+
+      <!-- ===================== STATISTICS VIEW ===================== -->
+      <section class="view hidden" id="view-stats">
+        <div class="view-head">
+          <h2>Statistics</h2>
+        </div>
+
+        <div class="stat-grid stat-grid--wide">
+          <div class="stat-card"><span class="stat-label">Avg WPM</span><span class="stat-value" id="statsAvgWPM">0</span></div>
+          <div class="stat-card"><span class="stat-label">Avg CPM</span><span class="stat-value" id="statsAvgCPM">0</span></div>
+          <div class="stat-card"><span class="stat-label">Avg Accuracy</span><span class="stat-value" id="statsAvgAccuracy">0%</span></div>
+          <div class="stat-card"><span class="stat-label">Total Mistakes</span><span class="stat-value" id="statsTotalMistakes">0</span></div>
+          <div class="stat-card"><span class="stat-label">Best WPM</span><span class="stat-value" id="statsBestWPM">0</span></div>
+          <div class="stat-card"><span class="stat-label">Current Streak</span><span class="stat-value" id="statsCurrentStreak">0</span></div>
+          <div class="stat-card"><span class="stat-label">Best Streak</span><span class="stat-value" id="statsBestStreak">0</span></div>
+          <div class="stat-card"><span class="stat-label">Lessons Completed</span><span class="stat-value" id="statsLessonsCompleted">0/30</span></div>
+        </div>
+
+        <div class="panel">
+          <h3>Key mastery heatmap</h3>
+          <p class="panel-sub">Greener keys are accurate. Redder keys need more reps — generate a Smart Drill to target them.</p>
+          <div class="keystrip keystrip--heatmap keystrip--large" id="statsKeyHeatmap" role="img" aria-label="Detailed key mastery heatmap"></div>
+        </div>
+
+        <div class="panel">
+          <h3>Lesson completion history</h3>
+          <div class="table-wrap">
+            <table class="history-table">
+              <thead>
+                <tr><th>Lesson</th><th>WPM</th><th>CPM</th><th>Accuracy</th><th>Mistakes</th><th>Stars</th><th>Date</th></tr>
+              </thead>
+              <tbody id="historyTableBody"></tbody>
+            </table>
+          </div>
+          <p class="empty-state hidden" id="historyEmptyState">No lessons completed yet — finish your first lesson to see history here.</p>
+        </div>
+      </section>
+
+      <!-- ===================== ACHIEVEMENTS VIEW ===================== -->
+      <section class="view hidden" id="view-achievements">
+        <div class="view-head">
+          <h2>Achievements</h2>
+        </div>
+        <p class="level-desc" id="achievementsSummary"></p>
+        <div class="badge-grid" id="badgeGrid"><!-- populated by JS --></div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<!-- ============================================================
+     RESULTS MODAL (shown after a lesson is completed)
+     ============================================================ -->
+<div class="modal-overlay hidden" id="resultsModal" role="dialog" aria-modal="true" aria-labelledby="resultsTitle">
+  <div class="modal results-modal">
+    <h2 id="resultsTitle">Lesson Complete!</h2>
+    <div class="results-stars" id="resultsStars" aria-hidden="true"></div>
+    <p class="results-stars-label" id="resultsStarsLabel"></p>
+
+    <div class="results-stats">
+      <div><span id="resultsWPM">0</span><label>WPM</label></div>
+      <div><span id="resultsCPM">0</span><label>CPM</label></div>
+      <div><span id="resultsAccuracy">0%</span><label>Accuracy</label></div>
+      <div><span id="resultsMistakes">0</span><label>Mistakes</label></div>
+    </div>
+
+    <div class="results-weakkeys hidden" id="resultsWeakKeysWrap">
+      <p class="results-weakkeys-label">Keys to watch</p>
+      <div class="keystrip" id="resultsWeakKeys"></div>
+    </div>
+
+    <div class="results-newbadges hidden" id="resultsNewBadgesWrap">
+      <p class="results-newbadges-label">New achievement unlocked</p>
+      <div class="badge-row" id="resultsNewBadges"></div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="resultsRestartBtn" type="button">Restart</button>
+      <button class="btn btn-ghost" id="resultsLessonsBtn" type="button">All Lessons</button>
+      <button class="btn btn-primary" id="resultsNextBtn" type="button">Next Lesson →</button>
+    </div>
+  </div>
+</div>
+
+<!-- Achievement unlock toast -->
+<div class="toast hidden" id="achievementToast"></div>
+
+<script src="script.js"></script>
+</body>
+</html>
